@@ -1,33 +1,103 @@
-# 🚀 Projeto React Simples
+# � MAN Store - E-commerce Completo
 
-Um projeto React moderno demonstrando o uso de rotas, hooks, axios e mocks.
+Um sistema de e-commerce completo com autenticação, CRUD de produtos, carrinho de compras e integração com Firebase.
 
-## 📋 Sobre o Projeto
+## 🎯 Funcionalidades
 
-Este é um projeto exemplo que demonstra uma aplicação React completa com:
-- **React Hooks** (useState, useEffect)
-- **React Router** para navegação
-- **Axios** para requisições HTTP
-- **MSW (Mock Service Worker)** para simulação de API
-- **Interface responsiva** e moderna
+### 🔐 Autenticação
+- Login com Google
+- Persistência de sessão
+- Proteção de rotas administrativas
+
+### 📦 Gestão de Produtos
+- **CRUD completo** de produtos
+- Upload de imagens via URL
+- Categorização de produtos
+- Interface administrativa
+
+### 🛍️ Carrinho de Compras
+- Adicionar/remover produtos
+- Controle de quantidade
+- Sincronização com Firebase
+- Persistência por usuário
+
+### 📧 Sistema de Pedidos
+- Finalização de compras
+- Envio automático de email para admin
+- Histórico de pedidos
+- Integração com EmailJS
 
 ## 🛠️ Tecnologias Utilizadas
 
 ### Frontend
 - **React 18** - Biblioteca principal
 - **React Router DOM** - Navegação entre páginas
-- **Axios** - Cliente HTTP para requisições
+- **React Hook Form** - Gerenciamento de formulários
+- **React Icons** - Ícones modernos
 - **CSS3** - Estilização responsiva
 
-### Desenvolvimento
-- **MSW (Mock Service Worker)** - Simulação de API
-- **React Scripts** - Configuração e build
+### Backend & Database
+- **Firebase** - Autenticação e banco de dados
+- **Firestore** - Banco de dados NoSQL
+- **Firebase Auth** - Autenticação com Google
+
+### Serviços Externos
+- **EmailJS** - Envio de emails
+- **Google Auth** - Login social
+
+## 🚀 Configuração e Instalação
+
+### 1. Pré-requisitos
+- Node.js (versão 14 ou superior)
+- Conta no Firebase
+- Conta no EmailJS (opcional)
+
+### 2. Instalação
+```bash
+# Clonar o repositório
+git clone https://github.com/ulissesalvesof/ReactTB.git
+cd ReactTB
+
+# Instalar dependências
+npm install
+
+# Copiar arquivo de ambiente
+cp .env.example .env
+```
+
+### 3. Configuração
+1. Configure o Firebase seguindo o guia em [SETUP.md](SETUP.md)
+2. Configure o EmailJS (opcional)
+3. Atualize as variáveis de ambiente no arquivo `.env`
+
+### 4. Executar o projeto
+```bash
+npm start
+```
 
 ## 📁 Estrutura do Projeto
 
 ```
 src/
 ├── components/          # Componentes reutilizáveis
+│   ├── Navbar.js       # Barra de navegação
+│   ├── Login.js        # Componente de login
+│   ├── ShoppingCart.js # Carrinho de compras
+│   └── ProductManager.js # Gestão de produtos
+├── context/            # Contextos React
+│   ├── AuthContext.js  # Contexto de autenticação
+│   └── AppContext.js   # Contexto global da aplicação
+├── pages/              # Páginas da aplicação
+│   ├── Home/           # Página inicial
+│   ├── Products.js     # Lista de produtos
+│   ├── About.js        # Sobre a empresa
+│   └── Contact.js      # Contato
+├── services/           # Serviços externos
+│   └── firebaseService.js # Integração com Firebase
+├── config/             # Configurações
+│   └── firebase.js     # Configuração do Firebase
+└── App.js             # Componente principal
+```
 │   ├── Navbar.js       # Barra de navegação
 │   └── SimpleFooter.js # Rodapé
 ├── pages/              # Páginas da aplicação

@@ -1,67 +1,57 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 import { Link } from 'react-router-dom';
-import axios from 'axios';
+import { useApp } from '../../context/AppContext';
+import { FaShoppingCart } from 'react-icons/fa';
 import './Home.css';
 
 const Home = () => {
-  const [featuredProducts, setFeaturedProducts] = useState([]);
-  const [stats, setStats] = useState(null);
-  const [loading, setLoading] = useState(true);
+  const { products, dispatch } = useApp();
+  const [email, setEmail] = useState('');
 
-  useEffect(() => {
-    const fetchData = async () => {
-      try {
-        const [productsResponse, statsResponse] = await Promise.all([
-          axios.get('/api/products/featured'),
-          axios.get('/api/stats')
-        ]);
-        
-        setFeaturedProducts(productsResponse.data);
-        setStats(statsResponse.data);
-      } catch (error) {
-        console.error('Erro ao carregar dados:', error);
-      } finally {
-        setLoading(false);
-      }
-    };
+  // Pegar apenas os primeiros 3 produtos para exibir como "em destaque"
+  const featuredProducts = products.slice(0, 3);
 
-    fetchData();
-  }, []);
+  const addToCart = (product) => {
+    dispatch({ type: 'ADD_TO_CART', payload: product });
+    alert(`${product.name} adicionado ao carrinho!`);
+  };
+
+  const handleNewsletterSubmit = (e) => {
+    e.preventDefault();
+    alert('Obrigado por se inscrever na nossa newsletter!');
+    setEmail('');
+  };
 
   const goals = [
     {
       id: 1,
-      title: 'Ganho de Massa',
-      icon: '💪',
-      description: 'Produtos para hipertrofia muscular',
-      category: 'mass-gain'
+      title: 'Eletrônicos',
+      icon: '�',
+      description: 'Smartphones, tablets e mais',
+      category: 'Eletrônicos'
     },
     {
       id: 2,
-      title: 'Emagrecimento',
-      icon: '🔥',
-      description: 'Suplementos para queima de gordura',
-      category: 'weight-loss'
+      title: 'Computadores',
+      icon: '�',
+      description: 'Notebooks, desktops e componentes',
+      category: 'Computadores'
     },
     {
       id: 3,
-      title: 'Performance',
-      icon: '⚡',
-      description: 'Melhore seu desempenho nos treinos',
-      category: 'performance'
+      title: 'Acessórios',
+      icon: '🎧',
+      description: 'Fones, capas e acessórios',
+      category: 'Acessórios'
     },
     {
       id: 4,
-      title: 'Saúde & Bem-estar',
-      icon: '🌱',
-      description: 'Vitaminas e minerais essenciais',
-      category: 'health'
+      title: 'Casa',
+      icon: '�',
+      description: 'Decoração e utilidades domésticas',
+      category: 'Casa'
     }
   ];
-
-  if (loading) {
-    return <div className="loading">Carregando...</div>;
-  }
 
   return (
     <div className="home">
@@ -69,8 +59,8 @@ const Home = () => {
       <section className="hero-section">
         <div className="container">
           <div className="hero-content">
-            <h1>MAN Nutrition</h1>
-            <p>Sua loja de suplementos com os melhores produtos do mercado</p>
+            <h1>MAN Store</h1>
+            <p>Sua loja online com os melhores produtos e tecnologia</p>
             <div className="hero-highlight">
               <span className="discount-badge">5% OFF no PIX</span>
               <span className="free-shipping">Frete grátis acima de R$ 99</span>
@@ -108,38 +98,36 @@ const Home = () => {
       </section>
 
       {/* Estatísticas */}
-      {stats && (
-        <section className="stats-section">
-          <div className="container">
-            <h2>Números que impressionam</h2>
-            <div className="stats-grid">
-              <div className="stat-item">
-                <h3>{stats.totalProducts}+</h3>
-                <p>Suplementos Disponíveis</p>
-              </div>
-              <div className="stat-item">
-                <h3>{stats.totalCategories}+</h3>
-                <p>Categorias</p>
-              </div>
-              <div className="stat-item">
-                <h3>{stats.totalUsers}+</h3>
-                <p>Clientes Satisfeitos</p>
-              </div>
-              <div className="stat-item">
-                <h3>{stats.totalOrders}+</h3>
-                <p>Pedidos Entregues</p>
-              </div>
+      <section className="stats-section">
+        <div className="container">
+          <h2>Números que impressionam</h2>
+          <div className="stats-grid">
+            <div className="stat-item">
+              <h3>{products.length}+</h3>
+              <p>Produtos Disponíveis</p>
+            </div>
+            <div className="stat-item">
+              <h3>5+</h3>
+              <p>Categorias</p>
+            </div>
+            <div className="stat-item">
+              <h3>1000+</h3>
+              <p>Clientes Satisfeitos</p>
+            </div>
+            <div className="stat-item">
+              <h3>500+</h3>
+              <p>Pedidos Entregues</p>
             </div>
           </div>
-        </section>
-      )}
+        </div>
+      </section>
 
-      {/* Qual sua meta */}
+      {/* Qual sua categoria */}
       <section className="goals-section">
         <div className="container">
           <div className="section-header">
-            <h2>Qual a sua meta?</h2>
-            <p>Encontre os produtos ideais para o seu objetivo</p>
+            <h2>Explore nossas categorias</h2>
+            <p>Encontre os produtos ideais para você</p>
           </div>
           
           <div className="goals-grid">
@@ -163,7 +151,7 @@ const Home = () => {
         <div className="container">
           <div className="section-header">
             <h2>Produtos em Destaque</h2>
-            <p>Os suplementos mais vendidos da nossa loja</p>
+            <p>Os melhores produtos da nossa loja</p>
           </div>
 
           <div className="products-grid">
@@ -188,14 +176,19 @@ const Home = () => {
                   </div>
                 </Link>
                 <div className="product-actions">
-                  <button className="btn btn-cart">Adicionar ao Carrinho</button>
+                  <button 
+                    className="btn btn-cart"
+                    onClick={() => addToCart(product)}
+                  >
+                    <FaShoppingCart /> Adicionar ao Carrinho
+                  </button>
                 </div>
               </div>
             ))}
           </div>
 
           <div className="section-footer">
-            <Link to="/products" className="btn btn-primary">Ver Todos os Suplementos</Link>
+            <Link to="/products" className="btn btn-primary">Ver Todos os Produtos</Link>
           </div>
         </div>
       </section>
@@ -203,7 +196,7 @@ const Home = () => {
       {/* Diferenciais */}
       <section className="features-section">
         <div className="container">
-          <h2>Por que escolher a MAN Nutrition?</h2>
+          <h2>Por que escolher a MAN Store?</h2>
           
           <div className="features-grid">
             <div className="feature-item">
@@ -224,7 +217,7 @@ const Home = () => {
             <div className="feature-item">
               <div className="feature-icon">💊</div>
               <h3>Suporte Nutricional</h3>
-              <p>Tire suas dúvidas com nossos especialistas em nutrição</p>
+              <p>Tire suas dúvidas com nossos especialistas</p>
             </div>
           </div>
         </div>
@@ -236,11 +229,13 @@ const Home = () => {
           <div className="newsletter-content">
             <h2>Receba nossas ofertas exclusivas</h2>
             <p>Cadastre-se e seja o primeiro a saber sobre promoções e lançamentos</p>
-            <form className="newsletter-form" onSubmit={(e) => e.preventDefault()}>
+            <form className="newsletter-form" onSubmit={handleNewsletterSubmit}>
               <input
                 type="email"
                 placeholder="Seu melhor e-mail"
                 className="newsletter-input"
+                value={email}
+                onChange={(e) => setEmail(e.target.value)}
                 required
               />
               <button type="submit" className="btn btn-newsletter">

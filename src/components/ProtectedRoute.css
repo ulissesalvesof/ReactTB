@@ -1,0 +1,63 @@
+.protected-route {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  min-height: 60vh;
+  padding: 2rem;
+}
+
+.protected-route.loading {
+  min-height: 60vh;
+}
+
+.loading-spinner {
+  font-size: 1.2rem;
+  color: #666;
+}
+
+.access-denied {
+  text-align: center;
+  padding: 3rem;
+  background: white;
+  border-radius: 12px;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.07);
+  max-width: 400px;
+  width: 100%;
+}
+
+.access-denied svg {
+  color: #6c757d;
+  margin-bottom: 1.5rem;
+}
+
+.access-denied h2 {
+  color: #1a1a1a;
+  margin-bottom: 1rem;
+  font-size: 1.8rem;
+}
+
+.access-denied p {
+  color: #666;
+  margin-bottom: 2rem;
+  line-height: 1.6;
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+  .protected-route {
+    padding: 1rem;
+  }
+  
+  .access-denied {
+    padding: 2rem;
+  }
+  
+  .access-denied h2 {
+    font-size: 1.5rem;
+  }
+  
+  .access-denied svg {
+    width: 48px;
+    height: 48px;
+  }
+}

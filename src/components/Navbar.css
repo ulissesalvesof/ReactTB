@@ -64,6 +64,77 @@
   transition: all 0.3s ease;
 }
 
+.nav-actions {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+}
+
+.cart-link {
+  position: relative;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.cart-badge {
+  position: absolute;
+  top: -8px;
+  right: -8px;
+  background-color: #861517;
+  color: white;
+  font-size: 0.75rem;
+  font-weight: 600;
+  padding: 0.2rem 0.5rem;
+  border-radius: 10px;
+  min-width: 18px;
+  text-align: center;
+}
+
+.admin-link {
+  color: #666;
+  transition: color 0.3s ease;
+}
+
+.admin-link:hover {
+  color: #861517;
+}
+
+.user-info {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.5rem 1rem;
+  border-radius: 20px;
+  background-color: rgba(134, 21, 23, 0.1);
+}
+
+.user-avatar {
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  object-fit: cover;
+  border: 2px solid #861517;
+}
+
+.user-name {
+  font-size: 0.9rem;
+  font-weight: 600;
+  color: #861517;
+}
+
+.login-link {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  color: #666;
+  transition: color 0.3s ease;
+}
+
+.login-link:hover {
+  color: #861517;
+}
+
 /* Responsive */
 @media (max-width: 768px) {
   .nav-links {

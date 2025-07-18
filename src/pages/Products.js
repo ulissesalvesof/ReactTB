@@ -1,43 +1,30 @@
-import React, { useEffect, useState } from 'react';
+import React, { useState, useMemo } from 'react';
 import { Link, useSearchParams } from 'react-router-dom';
-import axios from 'axios';
+import { useApp } from '../context/AppContext';
+import { FaShoppingCart } from 'react-icons/fa';
 
 const Products = () => {
-  const [products, setProducts] = useState([]);
-  const [categories, setCategories] = useState([]);
-  const [loading, setLoading] = useState(true);
+  const { products, dispatch } = useApp();
   const [searchParams, setSearchParams] = useSearchParams();
   
   const currentCategory = searchParams.get('category') || 'all';
   const searchTerm = searchParams.get('search') || '';
 
-  useEffect(() => {
-    const fetchData = async () => {
-      try {
-        setLoading(true);
-        
-        // Buscar produtos e categorias
-        const [productsResponse, categoriesResponse] = await Promise.all([
-          axios.get('/api/products', {
-            params: {
-              category: currentCategory !== 'all' ? currentCategory : undefined,
-              search: searchTerm || undefined
-            }
-          }),
-          axios.get('/api/categories')
-        ]);
-        
-        setProducts(productsResponse.data);
-        setCategories(categoriesResponse.data);
-      } catch (error) {
-        console.error('Erro ao carregar dados:', error);
-      } finally {
-        setLoading(false);
-      }
-    };
+  // Filtrar produtos baseado na categoria e termo de busca
+  const filteredProducts = useMemo(() => {
+    return products.filter(product => {
+      const matchesCategory = currentCategory === 'all' || product.category === currentCategory;
+      const matchesSearch = product.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
+                           product.description.toLowerCase().includes(searchTerm.toLowerCase());
+      return matchesCategory && matchesSearch;
+    });
+  }, [products, currentCategory, searchTerm]);
 
-    fetchData();
-  }, [currentCategory, searchTerm]);
+  // Obter categorias únicas dos produtos
+  const categories = useMemo(() => {
+    const uniqueCategories = [...new Set(products.map(product => product.category))];
+    return uniqueCategories;
+  }, [products]);
 
   const handleCategoryFilter = (category) => {
     const newParams = new URLSearchParams(searchParams);
@@ -61,6 +48,11 @@ const Products = () => {
       newParams.delete('search');
     }
     setSearchParams(newParams);
+  };
+
+  const addToCart = (product) => {
+    dispatch({ type: 'ADD_TO_CART', payload: product });
+    alert(`${product.name} adicionado ao carrinho!`);
   };
 
   return (
@@ -90,51 +82,48 @@ const Products = () => {
             </button>
             {categories.map(category => (
               <button
-                key={category.id}
-                className={`filter-btn ${currentCategory === category.slug ? 'active' : ''}`}
-                onClick={() => handleCategoryFilter(category.slug)}
+                key={category}
+                className={`filter-btn ${currentCategory === category ? 'active' : ''}`}
+                onClick={() => handleCategoryFilter(category)}
               >
-                {category.name}
+                {category}
               </button>
             ))}
           </div>
         </div>
 
         {/* Lista de Produtos */}
-        {loading ? (
-          <div className="loading">Carregando produtos...</div>
+        {filteredProducts.length === 0 ? (
+          <div className="no-products">
+            <p>Nenhum produto encontrado.</p>
+          </div>
         ) : (
-          <>
-            {products.length === 0 ? (
-              <div className="no-products">
-                <p>Nenhum produto encontrado.</p>
-              </div>
-            ) : (
-              <div className="products-grid">
-                {products.map(product => (
-                  <div key={product.id} className="product-card">
-                    <Link to={`/products/${product.id}`}>
-                      <div className="product-image">
-                        <img src={product.image} alt={product.name} />
-                      </div>
-                      <div className="product-info">
-                        <h3>{product.name}</h3>
-                        <p className="product-category">{product.category}</p>
-                        <p className="product-price">
-                          R$ {product.price.toFixed(2).replace('.', ',')}
-                        </p>
-                      </div>
-                    </Link>
-                    <div className="product-actions">
-                      <button className="btn btn-primary btn-small">
-                        Ver Detalhes
-                      </button>
-                    </div>
+          <div className="products-grid">
+            {filteredProducts.map(product => (
+              <div key={product.id} className="product-card">
+                <Link to={`/products/${product.id}`}>
+                  <div className="product-image">
+                    <img src={product.image} alt={product.name} />
                   </div>
-                ))}
+                  <div className="product-info">
+                    <h3>{product.name}</h3>
+                    <p className="product-category">{product.category}</p>
+                    <p className="product-price">
+                      R$ {product.price.toFixed(2).replace('.', ',')}
+                    </p>
+                  </div>
+                </Link>
+                <div className="product-actions">
+                  <button 
+                    className="btn btn-primary btn-small"
+                    onClick={() => addToCart(product)}
+                  >
+                    <FaShoppingCart /> Adicionar ao Carrinho
+                  </button>
+                </div>
               </div>
-            )}
-          </>
+            ))}
+          </div>
         )}
       </div>
     </div>
